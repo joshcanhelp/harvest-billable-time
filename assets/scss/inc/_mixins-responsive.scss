@@ -1,0 +1,73 @@
+//
+// Responsive utilities
+//
+
+@mixin larger_than_phone() {
+	@media (min-width: $b_small) {
+		@content
+	}
+}
+
+@mixin small_like_phone() {
+	@media (max-width: $b_small - 1) {
+		@content
+	}
+}
+
+@mixin larger_than_tablet() {
+	@media (min-width: $b_medium) {
+		@content
+	}
+}
+
+@mixin is_a_printer() {
+	@media print {
+		@content
+	}
+}
+
+@mixin hide_for_print() {
+	@include is_a_printer {
+		display: none !important
+	}
+}
+
+@mixin hide_small_block {
+	display: none;
+
+	@include larger_than_phone {
+		display: block;
+	}
+}
+
+@mixin small_small_block {
+	display: block;
+
+	@include larger_than_phone {
+		display: none;
+	}
+}
+
+@mixin hide_small_iblock {
+	display: none;
+
+	@include larger_than_phone {
+		display: inline-block;
+	}
+}
+
+@mixin hide_med_block {
+	display: none;
+
+	@include larger_than_tablet {
+		display: block;
+	}
+}
+
+@mixin hide_med_iblock {
+	display: none;
+
+	@include larger_than_tablet {
+		display: inline-block;
+	}
+}

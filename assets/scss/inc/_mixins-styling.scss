@@ -1,0 +1,15 @@
+//
+// Non-active and active state background color
+//
+
+@mixin hover_bg_color($bg_color, $txt_color: $c_brand_blue) {
+	background-color: $bg_color;
+	color: $txt_color;
+
+	&:hover,
+	&:focus,
+	&.active {
+		color: $txt_color;
+		background-color: lighten($bg_color, 10);
+	}
+}

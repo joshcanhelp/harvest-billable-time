@@ -1,0 +1,90 @@
+fieldset {
+  border: $base_border;
+  margin: 0 0 $l_v_gutter;
+  padding: 4%;
+}
+
+input,
+label,
+select {
+  display: block;
+}
+
+
+label {
+  font-weight: 700;
+  margin-bottom: 0.2em;
+  font-size: 0.9em;
+
+  &.required::after {
+    content: " *";
+    color: $c_action_blue;
+  }
+
+  abbr {
+    display: none;
+  }
+}
+
+#{$all-text-inputs},
+select[multiple=multiple] {
+  background-color: white;
+  border: $base_border;
+  border-radius: $base_border_radius;
+  box-sizing: border-box;
+  margin: $l_v_gutter_smlr 0;
+  padding: 0.4em 0.8em;
+  transition: border-color $t_base_duration $t_base_timing;
+  width: 100%;
+
+  &:hover {
+    border-color: shade($base_border_color, 20%);
+  }
+
+  &:focus {
+    border-color: #222;
+    outline: none;
+  }
+
+  &:disabled {
+    background-color: shade(white, 5%);
+    cursor: not-allowed;
+
+    &:hover {
+      border: $base_border;
+    }
+  }
+
+  &.error {
+    border-color: red
+  }
+}
+
+textarea {
+  resize: vertical;
+}
+
+input[type="search"] {
+  appearance: none;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  display: inline;
+  margin-right: $l_v_gutter_smlr;
+
+  + label {
+    display: inline-block;
+  }
+}
+
+input[type="file"] {
+  margin-bottom: $l_v_gutter_smlr;
+  width: 100%;
+}
+
+select {
+  margin-bottom: $l_v_gutter_smlr;
+  max-width: 100%;
+  width: auto;
+}

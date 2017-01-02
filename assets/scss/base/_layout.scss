@@ -1,0 +1,124 @@
+//
+// Universal layout classes
+//
+
+.outer {
+	@include clearfix;
+	display: block;
+	width: 100%;
+	min-width: $l_min_width;
+
+	// Type: top and bottom vertical padding
+
+	&__pad {
+		@extend .outer;
+		padding-top: $l_v_gutter_smlr;
+		padding-bottom: $l_v_gutter_smlr;
+
+		@include larger_than_phone {
+			padding-top: $l_v_gutter_sm;
+			padding-bottom: $l_v_gutter_sm;
+		}
+	}
+
+	// Type: more top and bottom vertical padding
+
+	&__pad-more {
+		@extend .outer;
+		padding-top: $l_v_gutter_sm;
+		padding-bottom: $l_v_gutter_sm;
+
+		@include larger_than_phone {
+			padding-top: $l_v_gutter;
+			padding-bottom: $l_v_gutter;
+		}
+	}
+}
+
+.inner {
+	@include clearfix;
+	display: block;
+	width: 100%;
+	max-width: $l_max_width;
+	margin: 2em auto;
+	padding: 0 4%;
+	position: relative;
+}
+
+//
+// Columns, need to be wrapped
+//
+
+.cols {
+
+	// Component: column wrapper, to make the margins work
+
+	&__wrap {
+		@include clearfix;
+		@include fill-parent;
+	}
+
+	// Type: regular content column with sidebar
+
+	&--content-ws {
+		@include fill-parent;
+
+		@include larger_than_phone {
+			@include span-columns(7)
+		}
+
+		@include larger_than_tablet {
+			@include span-columns(8)
+		}
+	}
+
+	// Type: regular content column without sidebar
+
+	&--content-ns {
+		@include fill-parent;
+		max-width: $l_max_width_reading;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	// Type: regular content column
+
+	&--sidebar {
+		@include fill-parent;
+
+		@include larger_than_phone {
+			@include span-columns(5);
+			padding-left: 5%;
+		}
+
+		@include larger_than_tablet {
+			@include span-columns(4)
+		}
+	}
+
+	// Types: generic cols
+
+	&--half {
+		@include fill-parent;
+
+		@include larger_than_phone {
+			@include span-columns(6);
+		}
+	}
+
+	&--third {
+		@include fill-parent;
+
+		@include larger_than_phone {
+			@include span-columns(4);
+		}
+	}
+
+	&--fourth {
+		@include fill-parent;
+
+		@include larger_than_phone {
+			@include span-columns(3);
+		}
+	}
+}

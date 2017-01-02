@@ -1,0 +1,104 @@
+//
+// The very basic base
+//
+
+body {
+	line-height: $line_height_base;
+	padding: 0;
+	margin: 0;
+	color: $c_text_reg;
+	background-color: $c_gray_lightest;
+
+	> * {
+		box-sizing: border-box;
+	}
+}
+
+//
+// Typography
+//
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+dt {
+	margin: 1em 0 0.75em;
+	line-height: 1.1em;
+	font-weight: bold;
+
+	&:first-child {
+		margin-top: 0;
+	}
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+h1 {
+	font-size: $f_size_h1;
+}
+
+h2 {
+	font-size: $f_size_h2;
+}
+
+h3 {
+	font-size: $f_size_h3;
+}
+
+h4 {
+	font-size: $f_size_h4;
+}
+
+h5 {
+	font-size: $f_size_h5;
+}
+
+h6 {
+	font-size: $f_size_h6;
+}
+
+p,
+ul,
+ol
+dd {
+	margin: 0 0 1em;
+	padding: 0;
+	line-height: $line_height_base;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+li {
+	margin: 0 0 0.75em;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+a {
+	color: $c_action_blue;
+	transition: color $t_base_timing;
+
+	&:hover {
+		color: shade($c_action_blue, 20%);
+	}
+}
+
+//
+// Media
+//
+
+img,
+iframe,
+figure {
+	max-width: 100%;
+	height: auto;
+}

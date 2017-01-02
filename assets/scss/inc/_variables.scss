@@ -1,0 +1,107 @@
+//
+// File system
+// These should all be relative to the final-processed CSS file
+//
+
+$dir_font: '../fonts/';
+$dir_image: '../images/';
+$dir_svg: '../svg/';
+
+
+//
+// Z-index
+//
+
+$z_index_1: 10;
+$z_index_2: 20;
+$z_index_3: 30;
+$z_index_4: 40;
+$z_index_5: 50;
+
+//
+// Base typography
+//
+
+$line_height_sm: 1.25em;
+$line_height_base: 1.5em;
+$line_height_lrg: 1.75em;
+
+$f_size_h1: 2.4em;
+$f_size_h2: 2.0em;
+$f_size_h3: 1.7em;
+$f_size_h4: 1.5em;
+$f_size_h5: 1.3em;
+$f_size_h6: 1.1em;
+
+//
+// Layout
+//
+
+$l_min_width: 320px;
+$l_max_width: 1200px;
+$l_max_width_reading: 750px;
+
+$l_v_gutter: 50px;
+$l_v_gutter_sm: 35px;
+$l_v_gutter_smlr: 12px;
+
+//
+// Breakpoints
+//
+
+$b_small: 650px;
+$b_medium: 800px;
+$b_large: 950px;
+
+//
+// Style guide colors
+//
+// This section should have all of the site-specific colors that are applied to the core
+// variables below. Stylesheets should not have brand-specific colors in them, they should
+// refer to the core ones here/
+//
+
+$c_action_blue: #3498db;
+$c_status_money: #2ecc71;
+$c_status_used: #7f8c8d;
+$c_status_waste: #2c3e50;
+
+//
+// Utility colors
+//
+
+$c_gray_lightest: #f4f4f4;
+$c_gray_light: shade($c_gray_lightest, 10%);
+$c_gray_medium: #676a74;
+$c_gray_dark: #474749;
+$c_gray_darkest: #222;
+
+
+
+$c_trans_darker: rgba(black, 0.8);
+
+$c_text_reg: $c_gray_dark;
+$c_text_light: $c_gray_medium;
+
+// UI
+
+$c_msg_success_bg: #DFF0D8;
+$c_msg_warning_bg: #FCF8E3;
+$c_msg_danger_bg: #F2DEDE;
+$c_msg_info_bg: #D9EDF7;
+
+//
+// Borders
+//
+
+$base_border_color: $c_gray_light;
+$base_border: 1px solid $base_border_color;
+
+$base_border_radius: 4px;
+
+//
+// Transitions
+//
+
+$t_base_timing: 0.3s;
+$t_base_duration: ease;

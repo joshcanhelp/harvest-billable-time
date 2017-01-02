@@ -1,0 +1,25 @@
+table {
+  border-collapse: collapse;
+  margin: $l_v_gutter_sm 0;
+  table-layout: fixed;
+  width: 100%;
+}
+
+th {
+  font-weight: bold;
+  border-bottom: $base_border;
+  text-align: left;
+  padding: 0.5em;
+  font-size: $f_size_h6;
+}
+
+td {
+  border-bottom: $base_border;
+  padding: 0.5em;
+}
+
+tr,
+td,
+th {
+  vertical-align: middle;
+}

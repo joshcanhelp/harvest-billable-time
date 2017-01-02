@@ -1,0 +1,46 @@
+%button,
+#{$all-buttons} {
+  appearance: none;
+  background-color: $c_action_blue;
+  border: 0;
+  border-radius: $base_border_radius;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: $f_size_h6;
+  line-height: 1;
+  padding: 0.5em 1em;
+  text-decoration: none;
+  transition: background-color $t_base_duration $t_base_timing;
+  user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  text-align: center;
+  text-transform: uppercase;
+
+  &:hover,
+  &:focus {
+    background-color: shade($c_action_blue, 20%);
+    color: #fff;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+
+    &:hover {
+      background-color: $c_action_blue;
+    }
+  }
+}
+
+%button--gray {
+  @extend %button;
+  background-color: $c_gray_dark;
+
+  &:hover,
+  &:focus {
+    background-color: shade($c_gray_dark, 20%);
+    color: #fff;
+  }
+}

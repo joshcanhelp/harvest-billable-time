@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Harvest tracking</title>
+	<link rel="stylesheet" href="dist/main.min.css">
+</head>
+<body>
+<div class="outer">
+	<div class="inner">
+		<div class="cols--content-ns">
+			<h1 id="appTitle">Harvest Tracking</h1>
+
+			<div class="app">
+
+				<div class="app__nav">
+					<a href="#day" class="app__nav__link" id="appNavDay">Today</a>
+					<a href="#week" class="app__nav__link" id="appNavWeek">Weeks</a>
+				</div>
+
+				<div id="day" class="app__screen">
+
+					<div class="app__status__bg">
+						<div class="app__status--money" id="appMoneyTime"></div>
+						<div class="app__status--used" id="appUsedTime"></div>
+						<div class="app__status--waste" id="appWasteTime"></div>
+					</div>
+
+					<div class="app__screen__row">
+						<h6 class="app__screen__col"><label for="appTotalTime">Total time:</label></h6>
+						<form class="app__screen__col" method="post" id="appTotalTimeForm" autocomplete="off">
+							<input type="text" name="appTotalTime" id="appTotalTime">
+							<input type="submit" tabindex="-1" class="app__u--hide-but-use">
+						</form>
+					</div>
+
+					<div class="app__screen__row">
+						<h6 class="app__screen__col">Did:</h6>
+						<ul class="app__screen__col" id="appEntries"></ul>
+					</div>
+
+				</div>
+
+				<div id="week" class="app__screen">
+					Hi this week
+				</div>
+			</div>
+
+			<div id="appMsgs">
+				<h6>Status:</h6>
+			</div>
+		</div>
+	</div>
+</div>
+
+	<script type="text/javascript" src="dist/axios.min.js"></script>
+	<script type="text/javascript" src="dist/js.cookie.js"></script>
+	<script type="text/javascript" src="dist/main.js"></script>
+</body>
+</html>
