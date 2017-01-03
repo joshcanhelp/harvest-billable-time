@@ -7,3 +7,9 @@ I built this to get a little better sense of how I spend my time at my desk. I'v
 So, as a part of [1PPM](https://medium.com/1ppm/the-1ppm-challenge-eaed5df0ef5a#.tcua87tuv), I decided to finish what I started and get this out there. 
 
 As of this writing, this is a WIP. I will have installation and usage documentation up by 2/1/2017.
+
+## Work log
+
+1/1/2017 - Picked back up getWeek() function and pushed that to getting the data I need. Saw that I should refactor getDaily() so getWeek() could parse and store the data the same way. Also setup this repo and met with my 1PPM buddyto make it official!
+
+1/3/2017 - Refactoring getDaily() to create a prepareEntry() function to store time entries consistently. Also adding in the time entry id to check if it exists or not. 

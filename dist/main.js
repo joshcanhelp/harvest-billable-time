@@ -94,8 +94,7 @@ var App = {
     //
 
     Harvest.init();
-    Harvest.getDaily();
-    Harvest.getWeek();
+    Harvest.getDaily( Harvest.getWeek );
 
 	},
 
@@ -342,7 +341,7 @@ var Harvest = {
         if ( response.status && response.status < 300 ) {
 
           // Debugging, nice to have
-
+          console.log( 'Response from getCompany()' );
           console.log( response.data );
 
           // Status with proof
@@ -374,12 +373,13 @@ var Harvest = {
 
 	},
 
-
   /**
    * Get daily entries for the Today display
+   *
+   * @param callback
    */
 
-  getDaily : function () {
+  getDaily : function ( callback ) {
 		'use strict';
 
 		if ( !this.accessToken ) {
@@ -397,6 +397,7 @@ var Harvest = {
 		)
 			.then( function ( response ) {
 
+        console.log( 'Response from getDaily()' );
 				console.log( response.data );
 				View.msg( 'Showing ' + response.data.for_day, true );
 
@@ -410,7 +411,12 @@ var Harvest = {
 				// Project data is provided separately
         // Just need whether the project is billable or not
         response.data.projects.forEach(function (el) {
-					Harvest.currProjects[el.id] = el.billable;
+
+					Harvest.currProjects[el.id] = {
+					  isBillable : el.billable,
+					  clientName : el.client,
+					  projectName : el.name
+					};
 				});
 
 				var totalTime = 0;
@@ -422,32 +428,29 @@ var Harvest = {
         // Run through all the entries and add them to the list while calculating the total
 				response.data.day_entries.forEach(function (el) {
 
-				  var storeEntry = {};
+				  var storeEntry = Harvest.prepareEntry( el );
 					var entryClass = '';
 
-					// Is this billable?
-          storeEntry.billable = Harvest.currProjects[el.project_id];
 					if ( storeEntry.billable ) {
 
+            // Count up billed time
 						entryClass = 'app__entry--money';
-						totalMoney = totalMoney + el.hours;
+						totalMoney = totalMoney + storeEntry.hours;
 					} else {
 
-						entryClass = 'app__entry--used';
-						totalUsed = totalUsed + el.hours;
+            // Count up unbilled time
+            entryClass = 'app__entry--used';
+            totalUsed = totalUsed + storeEntry.hours;
 					}
 
-					totalTime = totalTime + el.hours;
-          storeEntry.hours = el.hours;
+          // Count up total billed and unbilled time
+					totalTime = totalTime + storeEntry.hours;
 
           // Create the element and append to the list
-          storeEntry.label = el.client + ' - ' + el.project;
-          View.addTimeEntry( entryClass, storeEntry.label + ': ' + el.hours );
+          View.addTimeEntry( entryClass, storeEntry.label + ': ' + storeEntry.hours );
 
-          storeEntry.notes = el.notes;
-          storeEntry.task = el.task;
-          storeEntry.pid = el.project_id;
           newDay.entries.push( storeEntry );
+
 				});
 
         newDay.moneyTime = totalMoney;
@@ -465,13 +468,13 @@ var Harvest = {
 
         View.updateStatusBar();
 
-			}.bind(this) );
+        callback();
+
+			} );
 	},
 
   /**
    * Get Harvest entries for a specific week
-   *
-   * TODO: maybe convert to https://github.com/datejs/Datejs
    *
    * @param offset - if empty, this week; if not, integer to mean how many counting back
    */
@@ -479,7 +482,7 @@ var Harvest = {
   getWeek : function ( offset ) {
     'use strict';
 
-    if ( !this.accessToken ) {
+    if ( !Harvest.accessToken ) {
       View.msg( 'Cannot getEntries without an access token', false );
       return;
     }
@@ -515,18 +518,22 @@ var Harvest = {
 
     } else {
 
+      //
       // There was an offset so get that week
+      //
+
+      console.log( 'Get offset week' );
 
     }
 
     // console.log( dateFrom );
     // console.log( dateTo );
 
-    this.hAxios(
+    Harvest.hAxios(
       {
-        url    : this.entriesPath.replace('{USER_ID}', Storage.get('harvestUserId')),
+        url    : Harvest.entriesPath.replace('{USER_ID}', Storage.get('harvestUserId')),
         params : {
-          access_token : this.accessToken,
+          access_token : Harvest.accessToken,
           from : dateFrom,
           to : dateTo
         }
@@ -534,34 +541,62 @@ var Harvest = {
     )
       .then( function ( response ) {
 
-        // console.log( Harvest.currProjects);
+        console.log( 'Response from getWeek()' );
+        console.log( response );
+
         response.data.forEach(function (el) {
 
-          var projectId = parseInt( el.day_entry.project_id, 10 );
-
-          // Iterate through all time entries
-          console.log( 'On ' + el.day_entry.spent_at +
-            ' spent ' + ( el.day_entry.hours_with_timer ? el.day_entry.hours_with_timer : el.day_entry.hours ) +
-            ' for ' + el.day_entry.project_id +
-            ' (' + ( Harvest.currProjects[projectId] ? 'billable' : 'not-billable' ) + ')' );
+          var currDate = el.day_entry.spent_at;
 
           // Replace data for all days but today, leaving total hours
 
             // Get day from local
+            var thisDay = Storage.getDay( currDate );
+            console.log( 'Local storage for ' + currDate );
+            console.log( thisDay );
+
+            console.log( 'Prepared entry' );
+            console.log( Harvest.prepareEntry( el.day_entry ) );
+
             // Keep total hours
             // Replace entries
             // Set day to local
+            //Storage.setDay( el.day_entry.spent_at );
 
           // Calculate totals for billable, non-billable, and wasted
 
           // Output summary on week tab
 
         });
-        console.log(response);
+
       })
       .catch( function (error) {
+        console.log( 'Error response from getWeek()' );
         console.log( error );
       });
+  },
+
+  /**
+   * Prepare a single time entry for storing
+   * Will work with daily entry format or weekly report, normalizing to a specific format
+   *
+   * @param entry
+   * @returns {{id: Number, pid: Number, billable: *, label: string, notes: (*|string|Array), hours: *}}
+   */
+
+  prepareEntry : function ( entry ) {
+    'use strict';
+
+    var projectId = parseInt( entry.project_id, 10 );
+
+    return {
+      id       : parseInt( entry.id, 10 ),
+      pid      : projectId,
+      billable : Harvest.currProjects[projectId].isBillable,
+      label    : Harvest.currProjects[projectId].clientName + ' - ' + Harvest.currProjects[projectId].projectName,
+      notes    : entry.notes,
+      hours    : entry.hours_with_timer ? entry.hours_with_timer : entry.hours
+    };
   }
 };
 
