@@ -81,7 +81,7 @@ var App = {
           // An empty stored total time tells status update to use total tracked
           todayJson.totalTime = 0;
         } else {
-          todayJson.totalTime = totalTimeVal;
+          todayJson.totalTime = parseFloat( totalTimeVal );
         }
 
         Storage.setDay( App.harvestToday, todayJson );
@@ -544,31 +544,75 @@ var Harvest = {
         console.log( 'Response from getWeek()' );
         console.log( response );
 
+        var thisWeek = {
+          moneyTime : 0,
+          usedTime : 0,
+          totalTime : 0,
+          totalEntries : 0,
+          dates: []
+        };
+
         response.data.forEach(function (el) {
 
+          // Date of time entry
           var currDate = el.day_entry.spent_at;
 
-          // Replace data for all days but today, leaving total hours
+          // Get day from local
+          var thisDayLocal = Storage.getDay( currDate );
 
-            // Get day from local
-            var thisDay = Storage.getDay( currDate );
-            console.log( 'Local storage for ' + currDate );
-            console.log( thisDay );
+          // Prepare the time entry
+          var addEntry = Harvest.prepareEntry( el.day_entry );
 
-            console.log( 'Prepared entry' );
-            console.log( Harvest.prepareEntry( el.day_entry ) );
+          // Have we already seen this day?
+          if ( thisWeek.dates.indexOf( currDate ) > -1 ) {
 
-            // Keep total hours
-            // Replace entries
-            // Set day to local
-            //Storage.setDay( el.day_entry.spent_at );
+            // Have already cleared out the entries
+            // Need to add this new entry
+            thisDayLocal.entries.push( addEntry );
 
-          // Calculate totals for billable, non-billable, and wasted
+          } else {
 
-          // Output summary on week tab
+            // Mark this date as updated
+            thisWeek.dates.push( currDate );
 
+            // Clear out entries and add this new one
+            thisDayLocal.entries =[ addEntry ];
+
+            // Clear out time totals
+            thisDayLocal.usedTime = 0;
+            thisDayLocal.moneyTime = 0;
+          }
+
+          // Calculate time totals
+          if ( addEntry.billable ) {
+            thisDayLocal.moneyTime += addEntry.hours;
+            thisWeek.moneyTime += addEntry.hours;
+          } else {
+            thisDayLocal.usedTime += addEntry.hours;
+            thisWeek.usedTime += addEntry.hours;
+          }
+
+          thisWeek.totalTime += thisDayLocal.totalTime ? thisDayLocal.totalTime : addEntry.hours;
+
+          // Re-store our new local day
+          Storage.setDay( currDate, thisDayLocal );
         });
 
+        // Set total time
+        thisWeek.dates.forEach(function (el) {
+          var thisDayTotal = Storage.getDay( el );
+
+          //
+          // TODO: something funny here
+          //
+
+          thisWeek.totalTime += thisDayTotal.totalTime ?
+            thisDayTotal.totalTime :
+            thisDayTotal.moneyTime + thisDayTotal.usedTime;
+        });
+
+        // Dates updated
+        console.log( thisWeek );
       })
       .catch( function (error) {
         console.log( 'Error response from getWeek()' );
