@@ -265,7 +265,6 @@ var Harvest = {
     if ( this.accessToken && (Date.now() / 1000) < Cookies.get( this.accessTokenCookieExp ) ) {
 
       // We have an auth token in our cookies, not expired
-
       View.msg( 'Auth cookie found', true );
 
     } else {
@@ -328,47 +327,34 @@ var Harvest = {
     }
 
     // Grab company information to test out the token
-
-    this.hAxios(
-      {
+    this.hAxios( {
         url    : this.checkPath,
         params : {
           access_token : this.accessToken
         }
-      }
-    )
+      } )
+
+      // Success!
       .then( function ( response ) {
-        if ( response.status && response.status < 300 ) {
 
-          // Debugging, nice to have
-          console.log( 'Response from getCompany()' );
-          console.log( response.data );
+        // Store things we might need
+        Storage.set( 'harvestCompanyName', response.data.company.name );
+        Storage.set( 'harvestUserId', response.data.user.id );
+        Storage.set( 'harvestCompanyWeekStart', response.data.company.week_start_day );
 
-          // Status with proof
+        // Proof of connection
+        View.msg( [
+          View.make( 'img', { src : response.data.user.avatar_url, width : 120 } ),
+          View.make( 'p', {}, [ View.make( 'strong', {}, 'Company: ' ), response.data.company.name ] ),
+          View.make( 'p', {}, [ View.make( 'strong', {}, 'User: ' ), response.data.user.first_name ] ),
+          View.make( 'p', {}, [ View.make( 'strong', {}, 'User ID: ' ), response.data.user.id ] )
+        ], true );
 
-          View.msg( 'Harvest connected: ' + response.data.company.name, true );
+      } )
 
-          // Fun!
-
-          View.msg( 'Pulling data for ' + response.data.user.first_name, true );
-
-          var avatarImg = document.createElement( 'img' );
-          avatarImg.setAttribute('src', response.data.user.avatar_url );
-          avatarImg.setAttribute('width', 80 );
-
-          View.msg( avatarImg, true );
-
-          View.msg( 'User ID = ' + response.data.user.id, true );
-
-          // Store company data
-
-          Storage.set( 'harvestCompanyName', response.data.company.name );
-          Storage.set( 'harvestUserId', response.data.user.id );
-          Storage.set( 'harvestCompanyWeekStart', response.data.company.week_start_day );
-
-        } else {
-          View.msg( 'Harvest problem ... ' + response.statusText, false );
-        }
+      // Absolute failure!
+      .catch( function ( error ) {
+        View.axiosErr( error );
       } );
 
 	},
@@ -387,14 +373,14 @@ var Harvest = {
 			return;
 		}
 
-		this.hAxios(
-			{
+		this.hAxios( {
 				url    : this.dailyPath,
 				params : {
 					access_token : this.accessToken
 				}
-			}
-		)
+			} )
+
+      // Success!
 			.then( function ( response ) {
 
         console.log( 'Response from getDaily()' );
@@ -470,7 +456,12 @@ var Harvest = {
 
         callback();
 
-			} );
+			} )
+
+      // Utter failure!
+      .catch( function ( error ) {
+        View.axiosErr( error );
+      } );
 	},
 
   /**
@@ -529,16 +520,16 @@ var Harvest = {
     // console.log( dateFrom );
     // console.log( dateTo );
 
-    Harvest.hAxios(
-      {
+    Harvest.hAxios( {
         url    : Harvest.entriesPath.replace('{USER_ID}', Storage.get('harvestUserId')),
         params : {
           access_token : Harvest.accessToken,
           from : dateFrom,
           to : dateTo
         }
-      }
-    )
+      } )
+
+      // Success!
       .then( function ( response ) {
 
         console.log( 'Response from getWeek()' );
@@ -592,8 +583,6 @@ var Harvest = {
             thisWeek.usedTime += addEntry.hours;
           }
 
-          thisWeek.totalTime += thisDayLocal.totalTime ? thisDayLocal.totalTime : addEntry.hours;
-
           // Re-store our new local day
           Storage.setDay( currDate, thisDayLocal );
         });
@@ -602,22 +591,16 @@ var Harvest = {
         thisWeek.dates.forEach(function (el) {
           var thisDayTotal = Storage.getDay( el );
 
-          //
-          // TODO: something funny here
-          //
-
           thisWeek.totalTime += thisDayTotal.totalTime ?
             thisDayTotal.totalTime :
             thisDayTotal.moneyTime + thisDayTotal.usedTime;
         });
-
-        // Dates updated
-        console.log( thisWeek );
       })
-      .catch( function (error) {
-        console.log( 'Error response from getWeek()' );
-        console.log( error );
-      });
+
+      // Catastrophic failure!
+      .catch( function ( error ) {
+        View.axiosErr( error );
+      } );
   },
 
   /**
@@ -703,6 +686,58 @@ var DateUtil = {
 var View = {
 
   /**
+   * Elementr!
+   *
+   * @see https://goo.gl/md61lt
+   *
+   * @param type
+   * @param attrs
+   * @param append
+   *
+   * @returns {Element}
+   */
+
+  make : function ( type, attrs, append ) {
+    'use strict';
+
+    var el = document.createElement( type );
+
+    Object.keys( attrs ) .forEach( function ( attr ) {
+      el[attr] = attrs[attr];
+    } );
+
+    if ( append ) {
+
+      if ( ! Array.isArray( append ) ) {
+        append = [ append ];
+      }
+
+      append.forEach(function (add) {
+        el = View.addTextOrNode( add, el );
+      });
+    }
+
+    return el;
+  },
+
+  /**
+   * Append text or a node
+   *
+   * @param m
+   * @param el
+   */
+
+  addTextOrNode : function ( m, el ) {
+
+    if ( typeof m === 'string' || typeof m === 'number' ) {
+      m = document.createTextNode( m );
+    }
+
+    el.appendChild( m );
+    return el;
+  },
+
+  /**
    * Take a string or element, attach a class, and append it to the right place
    *
    * @param msg
@@ -712,19 +747,42 @@ var View = {
   msg : function ( msg, goodBad ) {
     'use strict';
 
-    var messageNode = document.createElement( 'p' );
-    messageNode.classList.add( 'message' );
-    messageNode.classList.add( goodBad ? 'success' : 'error' );
-
-    if ( typeof msg === 'string' ) {
-      messageNode.textContent = msg;
-    } else {
-      messageNode.appendChild( msg );
-    }
+    var messageNode = View.make(
+      'div',
+      { className: 'message ' + ( goodBad ? 'success' : 'error' ) },
+      msg
+    );
 
     document
       .getElementById( 'appMsgs' )
       .appendChild( messageNode );
+  },
+
+  /**
+   * Handle an Axios error response
+   *
+   * @see: https://github.com/mzabriskie/axios#handling-errors
+   *
+   * @param error
+   */
+
+  axiosErr : function ( error ) {
+    'use strict';
+
+    if ( error.response ) {
+
+      View.msg( [
+        View.make( 'p', {}, [View.make( 'strong', {}, 'Axios error response:' )] ),
+        View.make( 'p', {}, [View.make( 'strong', {}, 'Data: ' ), error.response.data] ),
+        View.make( 'p', {}, [View.make( 'strong', {}, 'Status: ' ), error.response.status] ),
+        View.make( 'p', {}, [View.make( 'strong', {}, 'Headers: ' ), error.response.headers] )
+      ], false );
+    } else {
+
+      View.msg( [
+        View.make( 'p', {}, [View.make( 'strong', {}, 'Axios error message: ' ), error.message] ),
+      ], false );
+    }
   },
 
   /**
@@ -836,13 +894,9 @@ var View = {
   addTimeEntry : function ( classAttr, label ) {
     'use strict';
 
-    var newEntry = document.createElement( 'li' );
-    newEntry.classList.add( classAttr );
-    newEntry.textContent = label;
-
     document
       .getElementById( 'appEntries' )
-      .appendChild( newEntry );
+      .appendChild( View.make( 'li', { className: classAttr }, label ) );
   },
 
   /**
