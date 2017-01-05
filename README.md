@@ -10,6 +10,8 @@ As of this writing, this is a WIP. I will have installation and usage documentat
 
 ## Work log
 
-1/1/2017 - Picked back up getWeek() function and pushed that to getting the data I need. Saw that I should refactor getDaily() so getWeek() could parse and store the data the same way. Also setup this repo and met with my 1PPM buddyto make it official!
+1/5/2017 - Did some refactoring of the View object to make it a little more flexible and less overall code to add simple elements. More to do here but it's much easier to work with in general. Big big thanks to David Gilbertson for his great article on [The VanillaJS Framework](https://hackernoon.com/how-i-converted-my-react-app-to-vanillajs-and-whether-or-not-it-was-a-terrible-idea-4b14b1b2faff#.11skzmto1). Used this to clean up some of the messagesa and add better error handling for Axios. To be frank, I'm up too early and just needed a little brain stretching before the day, hence nothing too terribly productive. Next up is the week view, which I have the data for. Then, loading previous weeks!
 
 1/3/2017 - Refactoring getDaily() to create a prepareEntry() function to store time entries consistently. Also adding in the time entry id to check if it exists or not. 
+
+1/1/2017 - Picked back up getWeek() function and pushed that to getting the data I need. Saw that I should refactor getDaily() so getWeek() could parse and store the data the same way. Also setup this repo and met with my 1PPM buddyto make it official!
