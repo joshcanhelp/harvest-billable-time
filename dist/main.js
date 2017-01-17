@@ -41,7 +41,7 @@ var App = {
 		}
 
 		// Get the current day data
-		this.harvestToday = DateUtil.formatDate();
+		this.harvestToday = Format.date();
 
 		//
 		// Attach interaction events
@@ -86,7 +86,7 @@ var App = {
 
         Storage.setDay( App.harvestToday, todayJson );
 
-        View.updateStatusBar();
+        View.updateStatusBar( todayJson, 'day' );
       });
 
     //
@@ -452,7 +452,7 @@ var Harvest = {
 				// Update stored day
         Storage.setDay( response.data.for_day, newDay );
 
-        View.updateStatusBar();
+        View.updateStatusBar( newDay, 'day' );
 
         callback();
 
@@ -504,7 +504,7 @@ var Harvest = {
 
         var dayDiff = DateUtil.dayDiff( thisDay, weekStartJs );
 
-        dateFrom = DateUtil.formatDate( new Date( Date.now() - DateUtil.daysToSeconds( dayDiff ) ) );
+        dateFrom = Format.date( new Date( Date.now() - DateUtil.daysToSeconds( dayDiff ) ) );
       }
 
     } else {
@@ -595,6 +595,8 @@ var Harvest = {
             thisDayTotal.totalTime :
             thisDayTotal.moneyTime + thisDayTotal.usedTime;
         });
+
+        View.addWeek( thisWeek );
       })
 
       // Catastrophic failure!
@@ -683,10 +685,53 @@ var DateUtil = {
   }
 };
 
+var Format = {
+
+  /**
+   * Format a time for Display
+   *
+   * @param time
+   *
+   * @returns {string}
+   */
+
+  timeDisplay : function ( time ) {
+    'use strict';
+
+    time = Math.round( time * 10 ) / 10;
+    return ( time < 0.01 ? 0 : time ) + '';
+
+  },
+
+  /**
+   * Format a date for Harvest
+   *
+   * @param dateObj
+   *
+   * @returns {string}
+   */
+
+  date : function ( dateObj ) {
+    'use strict';
+
+    if ( !dateObj ) {
+      dateObj = new Date();
+    }
+
+    return dateObj.getFullYear() +
+      '-' +
+      String( '0' + (dateObj.getMonth() + 1) )
+        .slice( -2 ) +
+      '-' +
+      String( '0' + (dateObj.getDate()) )
+        .slice( -2 );
+  }
+};
+
 var View = {
 
   /**
-   * Elementr!
+   * ELEMENTR
    *
    * @see https://goo.gl/md61lt
    *
@@ -786,7 +831,131 @@ var View = {
   },
 
   /**
+   * Adds a time entry to the day list
+   *
+   * @param classAttr
+   * @param label
+   */
+
+  addTimeEntry : function ( classAttr, label ) {
+    'use strict';
+
+    document
+      .getElementById( 'appEntries' )
+      .appendChild( View.make( 'li', { className : classAttr }, label ) );
+  },
+
+  /**
+   * Takes a specially-formatted week object and outputs the stats
+   *
+   * @param {Object} timeObj
+   */
+
+  addWeek : function ( timeObj ) {
+    'use strict';
+
+    View.updateStatusBar( timeObj, 'week' );
+
+    document
+      .getElementById('week')
+      .appendChild(
+        View.make( 'div', { className : 'app__screen__week__1' }, [
+          View.make( 'p', {}, [
+          View.make( 'strong', {}, 'Total: ' ),
+          View.make( 'span', {}, Format.timeDisplay( timeObj.totalTime ) )
+          ] ),
+          View.make( 'p', {}, [
+            View.make( 'strong', {}, 'Billable: ' ),
+            View.make( 'span', {}, Format.timeDisplay( timeObj.moneyTime ) )
+          ] ),
+        View.make( 'p', {}, [
+          View.make( 'strong', {}, 'Used: ' ),
+          View.make( 'span', {}, Format.timeDisplay( timeObj.usedTime ) )
+        ] ),
+          View.make( 'p', {}, [
+            View.make( 'strong', {}, 'Waste: ' ),
+            View.make( 'span', {}, Format.timeDisplay( timeObj.totalTime - timeObj.moneyTime - timeObj.usedTime ) )
+          ] )
+        ] ) );
+  },
+
+  /**
+   * Set bar widths for daily status
+   *
+   * @param timeObj
+   * @param dayOrWeek
+   */
+
+  updateStatusBar : function ( timeObj, dayOrWeek ) {
+    'use strict';
+
+    var totalTime = timeObj.totalTime ? timeObj.totalTime : timeObj.moneyTime + timeObj.usedTime;
+
+    var barObj = document.getElementById( dayOrWeek + 'Status' );
+    while ( barObj.hasChildNodes() ) {
+      barObj.removeChild( barObj.lastChild );
+    }
+
+    // Billable
+    var moneyPercent = timeObj.moneyTime / totalTime * 100;
+    if ( moneyPercent > 0.01 ) {
+      this.updateSingleStatus( {
+        percent: moneyPercent,
+        name: 'Money',
+        amount: Format.timeDisplay( timeObj.moneyTime )
+      }, 'app__status--money', barObj );
+    }
+
+    // Not billable
+    var usedPercent = timeObj.usedTime / totalTime * 100;
+    if ( usedPercent > 0.01 ) {
+      this.updateSingleStatus( {
+         percent : usedPercent,
+         name    : 'Used',
+         amount  : Format.timeDisplay( timeObj.usedTime )
+       }, 'app__status--used', barObj );
+    }
+
+    // Wasted
+    var wastePercent = 100 - moneyPercent - usedPercent;
+    if ( wastePercent >= 1 && wastePercent !== Infinity ) {
+      this.updateSingleStatus( {
+        percent: wastePercent,
+        name: 'Wasted',
+        amount: Format.timeDisplay( totalTime - timeObj.moneyTime - timeObj.usedTime )
+      }, 'app__status--waste', barObj );
+    }
+  },
+
+  /**
+   * Set single status bars
+   *
+   * @param {Object} labels
+   * @param {string} classAttr
+   * @param {Object} barObj
+   */
+
+  updateSingleStatus : function ( labels, classAttr, barObj ) {
+    'use strict';
+
+    barObj.appendChild(
+      View.make( 'div', {
+          className: classAttr,
+          style: 'width: ' + labels.percent + '%'
+        }, [
+          View.make( 'span', {
+              className: 'app__status__label app__status__amount'
+            }, labels.amount + ' [' + Math.round( labels.percent ) + '%]' ),
+          View.make( 'span', {
+            className : 'app__status__label app__status__name'
+          }, labels.name )
+        ] )
+    );
+  },
+
+  /**
    * Returns a DOM element with a GET form to do initial OAuth
+   * TODO: Use ELEMENTR above
    *
    * @param formAction
    *
@@ -883,75 +1052,6 @@ var View = {
 
     return authForm;
   },
-
-  /**
-   * Adds a time entry to the day list
-   *
-   * @param classAttr
-   * @param label
-   */
-
-  addTimeEntry : function ( classAttr, label ) {
-    'use strict';
-
-    document
-      .getElementById( 'appEntries' )
-      .appendChild( View.make( 'li', { className: classAttr }, label ) );
-  },
-
-  /**
-   * Set bar widths for daily status
-   */
-
-  updateStatusBar : function () {
-    'use strict';
-
-    var todayJson = Storage.getDay( App.harvestToday );
-    var totalTime = todayJson.totalTime ? todayJson.totalTime : todayJson.moneyTime + todayJson.usedTime;
-
-    // Billable
-    var moneyPercent = todayJson.moneyTime / totalTime * 100;
-    if ( moneyPercent > 0.01 ) {
-      this.updateSingleStatus( moneyPercent, document.getElementById( 'appMoneyTime' ) );
-    }
-
-    // Not billable
-    var usedPercent = todayJson.usedTime / totalTime * 100;
-    if ( usedPercent > 0.01 ) {
-      this.updateSingleStatus( usedPercent, document.getElementById( 'appUsedTime' ) );
-    }
-
-    // Wasted
-    var wastePercent = 100 - moneyPercent - usedPercent;
-    if ( wastePercent > 1 && wastePercent !== Infinity ) {
-      this.updateSingleStatus( wastePercent, document.getElementById( 'appWasteTime' ) );
-    }
-  },
-
-  /**
-   * Set single status bars
-   *
-   * @param percent
-   * @param bar
-   */
-
-  updateSingleStatus : function ( percent, bar ) {
-    'use strict';
-
-    // Percent label
-    var statusLabel = document.createElement( 'span' );
-    statusLabel.classList.add( 'app__entry__label' );
-    statusLabel.textContent = Math.round( percent ) + '%';
-
-    // Clear out previous label, if any
-    while ( bar.hasChildNodes() ) {
-      bar.removeChild( bar.lastChild );
-    }
-
-    // Set width
-    bar.setAttribute( 'style', 'width: ' + percent + '%' );
-    bar.appendChild( statusLabel );
-  }
 };
 
 

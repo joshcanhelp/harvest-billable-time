@@ -138,15 +138,22 @@
 		}
 	}
 
-	// Status bar
+	////
+	/// Status bar
+	//
+
 
 	&__status {
 
 		&__bg {
 			height: 2em;
-			margin-bottom: 1em;
+			margin: 2.5em 0;
 			background: $c_status_waste;
 		}
+
+		////
+		/// Status bar types
+		//
 
 		&--money,
 		&--used,
@@ -165,9 +172,30 @@
 		&--used {
 			background: $c_status_used;
 		}
+
+		////
+		/// Status bar labels
+		//
+
+		&__label {
+			font-size: 0.8em;
+			position: absolute;
+			left: 0;
+		}
+
+		&__name {
+			bottom: -2em;
+		}
+
+		&__amount {
+			top: -2em;
+
+		}
 	}
 
-	// Individual time entries
+	////
+	/// Individual time entries
+	//
 
 	&__entry {
 		padding: 0.25em 1em;
@@ -183,16 +211,6 @@
 		&--used {
 			@extend .app__entry;
 			background: lighten($c_status_used, 16);
-		}
-
-		// Percentage shown
-
-		&__label {
-			font-size: 0.7em;
-			color: white;
-			position: absolute;
-			top: 0.25em;
-			left: 0.5em;
 		}
 	}
 }
