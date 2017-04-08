@@ -18,11 +18,11 @@
 					<a href="#week" class="app__nav__link" id="appNavWeek">Weeks</a>
 				</div>
 
-				<div id="day" class="app__screen">
+				<div id="dayScreen" class="app__screen">
 
 					<div class="app__status__bg" id="dayStatus"></div>
 
-					<div class="app__screen__row">
+					<div class="app__screen__row app__screen__day">
 						<h6 class="app__screen__col"><label for="appTotalTime">Total time:</label></h6>
 						<form class="app__screen__col" method="post" id="appTotalTimeForm" autocomplete="off">
 							<input type="text" name="appTotalTime" id="appTotalTime">
@@ -30,17 +30,15 @@
 						</form>
 					</div>
 
-					<div class="app__screen__row">
+					<div class="app__screen__row app__screen__day">
 						<h6 class="app__screen__col">Did:</h6>
 						<ul class="app__screen__col" id="appEntries"></ul>
 					</div>
 
 				</div>
 
-				<div id="week" class="app__screen">
-
-					<div class="app__status__bg" id="weekStatus"></div>
-
+				<div id="weekScreen" class="app__screen">
+					<button class="app__button" id="appLoadWeek">Load week</button>
 				</div>
 			</div>
 
@@ -51,8 +49,13 @@
 	</div>
 </div>
 
-	<script type="text/javascript" src="dist/axios.min.js"></script>
-	<script type="text/javascript" src="dist/js.cookie.js"></script>
-	<script type="text/javascript" src="dist/main.js"></script>
+<script type="text/javascript" src="dist/axios.min.js"></script>
+<script type="text/javascript" src="dist/js.cookie.js"></script>
+<script type="text/javascript" src="assets/js/DateUtil.js"></script>
+<script type="text/javascript" src="assets/js/Format.js"></script>
+<script type="text/javascript" src="assets/js/Storage.js"></script>
+<script type="text/javascript" src="assets/js/View.js"></script>
+<script type="text/javascript" src="assets/js/Harvest.js"></script>
+<script type="text/javascript" src="assets/js/App.js"></script>
 </body>
 </html>

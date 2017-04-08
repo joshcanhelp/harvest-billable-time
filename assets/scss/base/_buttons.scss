@@ -7,9 +7,9 @@
   color: #fff;
   cursor: pointer;
   display: inline-block;
-  font-size: $f_size_h6;
+  font-size: 0.9em;
   line-height: 1;
-  padding: 0.5em 1em;
+  padding: 0.75em 2em;
   text-decoration: none;
   transition: background-color $t_base_duration $t_base_timing;
   user-select: none;
@@ -17,6 +17,7 @@
   white-space: nowrap;
   text-align: center;
   text-transform: uppercase;
+  letter-spacing: 0.02em;
 
   &:hover,
   &:focus {

@@ -121,8 +121,6 @@
 
 		&__row {
 			@include clearfix;
-			padding: 1em 0;
-			border-top: $base_border;
 		}
 
 		// Column in a row
@@ -135,6 +133,21 @@
 			@include larger_than_phone {
 				@include span-columns(6)
 			}
+		}
+
+		// A day
+
+		&__day {
+			border-top: $base_border;
+			padding: 1em 0;
+		}
+
+		// A week
+
+		&__week {
+			border-bottom: $base_border;
+			padding: 0 0 2em;
+			margin: 0 0 2em;
 		}
 	}
 
@@ -178,7 +191,7 @@
 		//
 
 		&__label {
-			font-size: 0.8em;
+			font-size: 0.7em;
 			position: absolute;
 			left: 0;
 		}
@@ -189,7 +202,7 @@
 
 		&__amount {
 			top: -2em;
-
+			font-weight: bold;
 		}
 	}
 
