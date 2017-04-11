@@ -26,64 +26,55 @@ var App = {
 		// Can we use local storage?
 		this.canStoreLocal = Storage.canLocalStore();
 
-		// Get the current state of the app
-		if ( window.location.hash.indexOf( Harvest.accessTokenParam ) === -1 ) {
-			this.changeState( window.location.hash.replace( '#', '' ), true );
-		}
-
-		window.onhashchange = function () {
-			'use strict';
-
-			App.changeState( window.location.hash.replace( '#', '' ) );
-		};
-
 		// Get the current day data
 		this.harvestToday = Format.date();
+
+		// Get the current state of the app
+		if ( window.location.hash.indexOf( Harvest.accessTokenParam ) === -1 ) {
+			this.changeState( this.getUrlHash() );
+		}
 
 		//
 		// Attach interaction events
 		//
 
+		// If the hash changes, alter the start
+		window.onhashchange = function () {
+			App.changeState( App.getUrlHash() );
+		};
+
 		// Update stored total time
 		document
 			.getElementById( 'appTotalTimeForm' )
 			.addEventListener( 'submit', function ( e ) {
-
 				e.preventDefault();
 
 				var theDate;
-				var theHash = window.location.hash;
-
-				if ( !theHash || !theHash.indexOf( '/' ) ) {
-
-					// No day listed so looking at today
-					theDate = App.harvestToday;
-				} else {
-
-					// Have a date to use
-					theDate = theHash.slice( theHash.indexOf( '/' ) )[ 1 ];
-				}
-
-				var todayJson = Storage.getDay( theDate );
 				var totalTimeVal = document.getElementById( 'appTotalTime' ).value;
 
-				// Can't have a total time less than what was tracked for the day
-				var minimumTime = todayJson.moneyTime + todayJson.usedTime;
+				// What date are we saving?
+				theDate = App.getDayToShow();
 
-				if ( !totalTimeVal || totalTimeVal < minimumTime ) {
+				// Get stored date for this date
+				var dateJson = Storage.getDay( theDate );
+
+				// Can't have a total time less than what was tracked for the day
+				var minimumTime = dateJson.moneyTime + dateJson.usedTime;
+
+				if ( ! totalTimeVal || totalTimeVal < minimumTime ) {
 
 					// Not a number, empty, or less than the minimum
 					document.getElementById( 'appTotalTime' ).value = minimumTime;
 
 					// An empty stored total time tells status update to use total tracked
-					todayJson.totalTime = 0;
+					dateJson.totalTime = 0;
 				} else {
-					todayJson.totalTime = parseFloat( totalTimeVal );
+					dateJson.totalTime = parseFloat( totalTimeVal );
 				}
 
-				Storage.setDay( theDate, todayJson );
+				Storage.setDay( theDate, dateJson );
+				View.updateStatusBar( dateJson, 'dayStatus' );
 
-				View.updateStatusBar( todayJson, 'dayStatus' );
 				Harvest.getWeek();
 			} );
 
@@ -114,6 +105,7 @@ var App = {
 		'use strict';
 
 		var navLink, appScreen;
+		var todayNavLink = document.getElementById( 'appNavDay' );
 
 		// Make everything inactive for now
 		document
@@ -128,6 +120,7 @@ var App = {
 			case 'week':
 				navLink = document.getElementById( 'appNavWeek' );
 				appScreen = document.getElementById( 'weekScreen' );
+				todayNavLink.innerHTML = 'Today';
 
 				if ( force ) {
 					window.location.hash = 'week';
@@ -136,8 +129,8 @@ var App = {
 				break;
 
 			default:
-				View.showDay( hash.indexOf( '/' ) ? hash.split( '/' )[ 1 ] : App.harvestToday );
-				navLink = document.getElementById( 'appNavDay' );
+				View.showDay( App.getDayToShow() );
+				navLink = todayNavLink;
 				appScreen = document.getElementById( 'dayScreen' );
 
 				if ( force ) {
@@ -179,6 +172,24 @@ var App = {
 		} );
 
 		return pieces;
+	},
+
+	getUrlHash : function () {
+
+		return window.location.hash.replace( '#', '' );
+	},
+
+	/**
+	 * Determine what date we're showing based on the URL hash
+	 *
+	 * @returns {string}
+	 */
+
+	getDayToShow : function () {
+
+		return window.location.hash.indexOf( '/' ) < 0 ?
+			App.harvestToday :
+			window.location.hash.split( '/' )[ 1 ];
 	}
 };
 

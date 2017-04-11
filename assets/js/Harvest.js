@@ -241,7 +241,7 @@ var Harvest = {
 				Storage.setDay( response.data.for_day, newDay );
 
 				// Show the day
-				View.showDay( newDay );
+				View.showDay( App.getDayToShow() );
 
 				callback();
 			} )

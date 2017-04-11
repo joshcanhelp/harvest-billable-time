@@ -67,15 +67,13 @@ var View = {
 	msg : function ( msg, goodBad ) {
 		'use strict';
 
-		var messageNode = View.make(
-			'div',
-			{ className : 'message ' + ( goodBad ? 'success' : 'error' ) },
-			msg
-		);
-
 		document
 			.getElementById( 'appMsgs' )
-			.appendChild( messageNode );
+			.appendChild( View.make(
+				'div', {
+					className : 'message ' + ( goodBad ? 'success' : 'error' )
+				}, msg
+			) );
 	},
 
 	/**
@@ -150,10 +148,11 @@ var View = {
 	addTimeEntry : function ( timeEntry ) {
 		'use strict';
 
-		View.dayTimeEntries.appendChild(
-			View.make( 'li',
-				{ className : 'app__entry--' + ( timeEntry.billable ? 'money' : 'used' ) },
-				timeEntry.label + ': ' + timeEntry.hours ) );
+		View.dayTimeEntries.appendChild( View.make(
+			'li', {
+				className : 'app__entry--' + ( timeEntry.billable ? 'money' : 'used' )
+			}, timeEntry.label + ': ' + timeEntry.hours
+		) );
 	},
 
 	/**
@@ -167,7 +166,9 @@ var View = {
 	addWeek : function ( timeObj, weekNum, dateFromSec ) {
 		'use strict';
 
-		var thisWeek = View.make( 'div', { className : 'app__screen__row app__screen__week', id : 'week' + weekNum }, [
+		var thisWeek = View.make( 'div', {
+				className : 'app__screen__row app__screen__week', id : 'week' + weekNum
+		}, [
 			View.make( 'div', { className : 'app__status__bg', id : 'weekStatus' + weekNum }, [] ),
 			View.make( 'div', { className : 'app__screen__col' }, [
 				View.make( 'h2', {}, 'Week ' + weekNum ),
