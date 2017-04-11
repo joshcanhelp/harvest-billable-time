@@ -67,13 +67,6 @@ var Harvest = {
 		);
 
 		this.week1DateFromSec = Date.now() - DateUtil.daysToSeconds( dayDiff );
-
-		if ( this.runAuth() ) {
-			this.getCompany();
-			return true;
-		}
-
-		return false;
 	},
 
 	/**

@@ -95,7 +95,10 @@ var App = {
 			} );
 
 		// Harvest startup
-		if ( Harvest.init() ) {
+		Harvest.init();
+
+		if ( Harvest.runAuth() ) {
+			Harvest.getCompany();
 			Harvest.getDaily( Harvest.getWeek );
 		}
 	},

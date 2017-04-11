@@ -331,91 +331,49 @@ var View = {
 	harvestAuthForm : function ( formAction ) {
 		'use strict';
 
-		var authForm = document.createElement( 'form' );
-		authForm.setAttribute( 'method', 'get' );
-		authForm.setAttribute( 'action', formAction );
+		return this.make( 'form', {
+			method : 'get',
+			action : formAction,
+			onsubmit : function ( e ) {
 
-		// Client ID input
+				var clientId = document.querySelector( '[name=client_id]' );
 
-		var inputClientId = document.createElement( 'input' );
-		inputClientId.setAttribute( 'name', 'client_id' );
+				if ( clientId.value ) {
 
-		var maybeExistingClientId = Storage.get( 'harvestClientId' );
+					Storage.set( 'harvestClientId', clientId.value );
+					View.msg( 'Heading to Harvest, hang on tight!', true );
 
-		// If we have one stored, don't show, just add it to the form as a hidden input
+				} else {
+					e.preventDefault();
 
-		if ( maybeExistingClientId ) {
-			inputClientId.setAttribute( 'type', 'hidden' );
-			inputClientId.setAttribute( 'value', maybeExistingClientId );
-		} else {
-			inputClientId.setAttribute( 'type', 'text' );
-			inputClientId.setAttribute( 'placeholder', 'Enter your OAuth client ID' );
-		}
-
-		var inputClientSecret = document.createElement( 'input' );
-		inputClientSecret.setAttribute( 'name', 'client_secret' );
-
-		if ( !Storage.get( 'harvestClientSecret' ) ) {
-			inputClientSecret.setAttribute( 'type', 'text' );
-			inputClientSecret.setAttribute( 'placeholder', 'Enter your OAuth client ID' );
-		}
-
-		var inputSubmit = document.createElement( 'input' );
-		inputSubmit.setAttribute( 'type', 'submit' );
-		inputSubmit.setAttribute( 'value', 'Authorize' );
-
-		var inputState = document.createElement( 'input' );
-		inputState.setAttribute( 'type', 'hidden' );
-		inputState.setAttribute( 'name', 'state' );
-		inputState.setAttribute( 'value', 'optional-csrf-token' );
-
-		var inputReponseType = document.createElement( 'input' );
-		inputReponseType.setAttribute( 'type', 'hidden' );
-		inputReponseType.setAttribute( 'name', 'response_type' );
-		inputReponseType.setAttribute( 'value', 'token' );
-
-		var inputRedirectUri = document.createElement( 'input' );
-		inputRedirectUri.setAttribute( 'type', 'hidden' );
-		inputRedirectUri.setAttribute( 'name', 'redirect_uri' );
-		inputRedirectUri.setAttribute( 'value', window.location.href );
-
-		authForm.appendChild( inputClientId );
-		authForm.appendChild( inputState );
-		authForm.appendChild( inputReponseType );
-		authForm.appendChild( inputRedirectUri );
-		authForm.appendChild( inputSubmit );
-
-		authForm.addEventListener( 'submit', function ( e ) {
-
-			var clientId = document.querySelector( '[name=client_id]' );
-			var secretId = document.querySelector( '[name=client_secret]' );
-
-			if ( clientId.value && secretId.value ) {
-
-				// Store and send client ID
-
-				Storage.set( 'harvestClientId', clientId.value );
-
-				// Store but don't send client secret
-
-				Storage.set( 'harvestClientSecret', secretId.value );
-				secretId.parentNode.removeChild( secretId );
-
-				View.msg( 'Heading to Harvest, hang on tight!', true );
-
-			} else {
-				e.preventDefault();
-
-				if ( !clientId.value ) {
 					clientId.classList.add( 'error' );
 				}
-
-				if ( !secretId.value ) {
-					secretId.classList.add( 'error' );
-				}
 			}
-		} );
-
-		return authForm;
+		}, [
+			this.make( 'input', {
+				name : 'client_id',
+				type : 'text',
+				placeholder : 'Enter your OAuth client ID'
+			} ),
+			this.make( 'input', {
+				type : 'submit',
+				value : 'Authorize'
+			} ),
+			this.make( 'input', {
+				type : 'hidden',
+				name : 'state',
+				value : 'optional-csrf-token'
+			} ),
+			this.make( 'input', {
+				type : 'hidden',
+				name : 'response_type',
+				value : 'token'
+			} ),
+			this.make( 'input', {
+				type : 'hidden',
+				name : 'redirect_uri',
+				value : window.location.href
+			} )
+		] );
 	}
 };
