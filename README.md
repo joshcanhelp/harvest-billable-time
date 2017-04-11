@@ -39,3 +39,13 @@ Click on **Weeks** to see the weekly total and load more weeks:
 ![Harvest billable time](https://www.dropbox.com/s/6k563cev0y3e6up/Screenshot%202017-04-08%2010.14.41.png?dl=1)
 
 One thing to note here. If you get an error when loading new weeks, it's likely because you have an archived project in your timesheet. You can re-open the project and re-load the list to see that week's data.
+
+By default, you'll see your billable hours and non-billable hours in a status bar of the day and then rolled up into a week. If you're tracking time on accounting, bookkeeping, pro bono, or other unpaid work along with billable time, you'll see that break-down. 
+
+But this tool is meant to go one step further and show your wasted time as well. That means you'll need to keep track of total hours worked during the day. If you're dilligent enough then a start and an end time would probably work but if you take coffee/tea/water/food breaks and talk to your family breaks and go walk around the block breaks (all of which help to fend off the Work From Home Crazies) then you'll probably want to keep a little closer track. 
+
+I track total time in front of a computer manually. When I sit down in the morning, I write that time down immediately. Maybe I read a few sites, maybe I shuffle around papers, or maybe I get right to it but the day's timer is already running. If I take 15 minutes off, I'll keep the "timer" running and just note that I was away for 15. If I stop for an extended period of time, I'll write an end date for the first period, then another start date when I'm back. Notes and archives without this app look like this:
+
+![Harvest billable time](https://www.dropbox.com/s/7xyflceuptcbasw/harvest_notes.jpg?dl=1)
+
+This is definitely extra work but I see it as worth the time to remind myself both that I need to hit a certain number of hours and show myself how much time I lose to the internet. 
