@@ -1,3 +1,9 @@
+/**
+ * Handle display updates
+ *
+ * @type {{loadWeekButton: Element, dayTimeEntries: Element, make: View.make, addTextOrNode: View.addTextOrNode, msg: View.msg, axiosErr: View.axiosErr, showDay: View.showDay, addTimeEntry: View.addTimeEntry, addWeek: View.addWeek, updateStatusBar: View.updateStatusBar, updateSingleStatus: View.updateSingleStatus, harvestAuthForm: View.harvestAuthForm}}
+ */
+
 var View = {
 
 	loadWeekButton : document.getElementById( 'appLoadWeek' ),
@@ -8,9 +14,9 @@ var View = {
 	 *
 	 * @see https://goo.gl/md61lt
 	 *
-	 * @param type
-	 * @param attrs
-	 * @param append
+	 * @param {string} type
+	 * @param {object} attrs
+	 * @param {object} append
 	 *
 	 * @returns {Element}
 	 */
@@ -43,8 +49,8 @@ var View = {
 	/**
 	 * Append text or a node
 	 *
-	 * @param m
-	 * @param el
+	 * @param {*} m
+	 * @param {Element} el
 	 */
 
 	addTextOrNode : function ( m, el ) {
@@ -60,8 +66,8 @@ var View = {
 	/**
 	 * Take a string or element, attach a class, and append it to the right place
 	 *
-	 * @param msg
-	 * @param goodBad
+	 * @param {string} msg
+	 * @param {boolean} goodBad
 	 */
 
 	msg : function ( msg, goodBad ) {
@@ -81,7 +87,7 @@ var View = {
 	 *
 	 * @see: https://github.com/mzabriskie/axios#handling-errors
 	 *
-	 * @param error
+	 * @param {Error} error
 	 */
 
 	axiosErr : function ( error ) {
@@ -106,7 +112,7 @@ var View = {
 	/**
 	 * Get a day and show it
 	 *
-	 * @param {String|Object} showDay
+	 * @param {string|object} showDay
 	 */
 
 	showDay : function ( showDay ) {
@@ -120,9 +126,9 @@ var View = {
 		if ( showDay ) {
 
 			// Total time to field
-			document.getElementById( 'appTotalTime' ).value = showDay.totalTime ?
-				showDay.totalTime :
-				showDay.moneyTime + showDay.usedTime;
+			document.getElementById( 'appTotalTime' ).value = showDay.totalTime
+				? showDay.totalTime
+				: showDay.moneyTime + showDay.usedTime;
 
 			// Clear out existing entries, if any
 			while ( View.dayTimeEntries.firstChild ) {
@@ -142,7 +148,7 @@ var View = {
 	/**
 	 * Adds a time entry to the day list
 	 *
-	 * @param {Object} timeEntry
+	 * @param {object} timeEntry
 	 */
 
 	addTimeEntry : function ( timeEntry ) {
@@ -158,9 +164,9 @@ var View = {
 	/**
 	 * Takes a specially-formatted week object and outputs the stats
 	 *
-	 * @param {Object} timeObj
-	 * @param {Number} weekNum
-	 * @param {Number} dateFromSec
+	 * @param {object} timeObj
+	 * @param {number} weekNum
+	 * @param {number} dateFromSec
 	 */
 
 	addWeek : function ( timeObj, weekNum, dateFromSec ) {
@@ -219,7 +225,9 @@ var View = {
 				] ),
 				View.make( 'div', {}, [
 					View.make( 'strong', {}, 'Waste: ' ),
-					View.make( 'span', {}, Format.timeDisplay( timeObj.totalTime - timeObj.moneyTime - timeObj.usedTime ) )
+					View.make( 'span', {}, Format.timeDisplay(
+						timeObj.totalTime - timeObj.moneyTime - timeObj.usedTime
+					) )
 				] )
 			] )
 		] );
@@ -245,12 +253,11 @@ var View = {
 		View.updateStatusBar( timeObj, 'weekStatus' + weekNum );
 	},
 
-
 	/**
 	 * Set bar widths for daily status
 	 *
-	 * @param {Object} timeObj
-	 * @param {String} statusNodeId
+	 * @param {object} timeObj
+	 * @param {string} statusNodeId
 	 */
 
 	updateStatusBar : function ( timeObj, statusNodeId ) {
@@ -297,9 +304,9 @@ var View = {
 	/**
 	 * Set single status bars
 	 *
-	 * @param {Object} labels
+	 * @param {object} labels
 	 * @param {string} classAttr
-	 * @param {Object} barObj
+	 * @param {object} barObj
 	 */
 
 	updateSingleStatus : function ( labels, classAttr, barObj ) {
@@ -322,7 +329,6 @@ var View = {
 
 	/**
 	 * Returns a DOM element with a GET form to do initial OAuth
-	 * TODO: Use ELEMENTR above
 	 *
 	 * @param formAction
 	 *

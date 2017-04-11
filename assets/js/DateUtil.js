@@ -1,5 +1,5 @@
 /**
- * Fun helper functions for dealing with dates
+ * Helper functions for dealing with dates
  *
  * @type {{dayDiff: DateUtil.dayDiff, daysToSeconds: DateUtil.daysToSeconds, convertJsDay: DateUtil.convertJsDay}}
  */
@@ -9,8 +9,8 @@ var DateUtil = {
 	/**
 	 * Get the difference in days between days of the week
 	 *
-	 * @param today
-	 * @param weekStart
+	 * @param {number} today
+	 * @param {string} weekStart
 	 *
 	 * @returns {number}
 	 */
@@ -24,7 +24,7 @@ var DateUtil = {
 	/**
 	 * Get a time duration in seconds from days
 	 *
-	 * @param days
+	 * @param {number} days
 	 *
 	 * @returns {number}
 	 */
@@ -38,7 +38,7 @@ var DateUtil = {
 	/**
 	 * Get the day of the week name from a JS day number
 	 *
-	 * @param jsDay
+	 * @param {string|int} jsDay
 	 *
 	 * @returns {string|int}
 	 */
@@ -52,6 +52,7 @@ var DateUtil = {
 
 			// If it's a string, assume we want to convert from English day to JS day
 			return dotw.indexOf( jsDay );
+
 		} else {
 
 			// If it's anything else, assume int and we want to convert JS day to English day

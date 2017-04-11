@@ -3,6 +3,8 @@
  * Uses Kyle Simpson's OLOO (as a model)
  *
  * @see http://stackoverflow.com/a/30468602/728480
+ *
+ * @type {{canStoreLocal: boolean, yearNow: string, monthNow: string, dayNow: string, harvestToday: string, init: App.init, changeState: App.changeState, parseParams: App.parseParams, getUrlHash: App.getUrlHash, getDayToShow: App.getDayToShow}}
  */
 
 var App = {
@@ -138,16 +140,14 @@ var App = {
 				}
 		}
 
-		if ( navLink && appScreen ) {
-			navLink.classList.add( 'is-active' );
-			appScreen.classList.add( 'is-active' );
-		}
+		navLink.classList.add( 'is-active' );
+		appScreen.classList.add( 'is-active' );
 	},
 
 	/**
 	 * Given a string, parse out the params
 	 *
-	 * @param params
+	 * @param {string} params
 	 * @returns {{}}
 	 */
 
@@ -163,7 +163,6 @@ var App = {
 		var pieces = {};
 
 		// Normalize param string in case it was passed in with prepended char
-
 		params = params.replace( '?', '' );
 		params = params.replace( '#', '' );
 
@@ -173,6 +172,12 @@ var App = {
 
 		return pieces;
 	},
+
+	/**
+	 * Normalize URL hash getting
+	 *
+	 * @returns {string}
+	 */
 
 	getUrlHash : function () {
 

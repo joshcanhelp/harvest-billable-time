@@ -1,6 +1,7 @@
 /**
  * Local storage API API
- * @type {{canLocalStore: Storage.canLocalStore}}
+ *
+ * @type {{canLocalStore: Storage.canLocalStore, get: Storage.get, set: Storage.set, getDay: Storage.getDay, setDay: Storage.setDay}}
  */
 
 var Storage = {
@@ -24,6 +25,7 @@ var Storage = {
 			window.localStorage.removeItem( x );
 
 			return true;
+
 		} catch ( e ) {
 			alert( 'localStorage not supported so this will not work for you, unfortunately' );
 			return false;
@@ -33,7 +35,7 @@ var Storage = {
 	/**
 	 * Getter for local storage
 	 *
-	 * @param key
+	 * @param {string} key
 	 */
 
 	get : function ( key ) {
@@ -45,8 +47,8 @@ var Storage = {
 	/**
 	 * Setter for local storage
 	 *
-	 * @param key
-	 * @param val
+	 * @param {string} key
+	 * @param {string|int|object} val
 	 */
 
 	set : function ( key, val ) {
@@ -58,7 +60,7 @@ var Storage = {
 	/**
 	 * Getter for days in local storage
 	 *
-	 * @param key
+	 * @param {string} key
 	 */
 
 	getDay : function ( key ) {

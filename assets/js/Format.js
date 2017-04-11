@@ -1,7 +1,7 @@
 /**
  * Formatting data in a standard way
  *
- * @type {{timeDisplay: Format.timeDisplay, date: Format.date, timeEntry: Format.timeEntry}}
+ * @type {{timeDisplay: Format.timeDisplay, date: Format.date, dateDisplay: Format.dateDisplay, timeEntry: Format.timeEntry}}
  */
 
 var Format = {
@@ -9,7 +9,7 @@ var Format = {
 	/**
 	 * Format a time for Display
 	 *
-	 * @param time
+	 * @param {number} time
 	 *
 	 * @returns {string}
 	 */
@@ -25,7 +25,7 @@ var Format = {
 	/**
 	 * Format a date for Harvest
 	 *
-	 * @param dateObj
+	 * @param {Date} dateObj
 	 *
 	 * @returns {string}
 	 */
@@ -45,7 +45,7 @@ var Format = {
 	/**
 	 * Format a date for display
 	 *
-	 * @param dateObj
+	 * @param {Date} dateObj
 	 *
 	 * @returns {string}
 	 */
@@ -53,7 +53,7 @@ var Format = {
 	dateDisplay : function ( dateObj ) {
 		'use strict';
 
-		if ( !dateObj ) {
+		if ( ! dateObj ) {
 			dateObj = new Date();
 		}
 
@@ -66,8 +66,9 @@ var Format = {
 	 * Prepare a single time entry for storing
 	 * Will work with daily entry format or weekly report, normalizing to a specific format
 	 *
-	 * @param entry
-	 * @returns {{id: Number, pid: Number, billable: *, label: string, notes: (*|string|Array), hours: *}}
+	 * @param {object} entry
+	 *
+	 * @returns {{id: Number, pid: Number, billable: *, label: string, notes: *, hours: *}}
 	 */
 
 	timeEntry : function ( entry ) {
@@ -86,4 +87,3 @@ var Format = {
 		};
 	}
 };
-

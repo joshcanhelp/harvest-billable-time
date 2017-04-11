@@ -1,7 +1,7 @@
 /**
  * Harvest API API
  *
- * @type {{authKey: string, clientId: string, baseUrl: string, authPath: string, init: Harvest.init, get: Harvest.get}}
+ * @type {{week1DateFromSec: number, currProjects: {}, accessToken: string, accessTokenCookie: string, accessTokenCookieExp: string, accessTokenParam: string, baseUrl: string, authPath: string, checkPath: string, dailyPath: string, entriesPath: string, init: Harvest.init, runAuth: Harvest.runAuth, getCompany: Harvest.getCompany, getDaily: Harvest.getDaily, getWeek: Harvest.getWeek}}
  */
 
 var Harvest = {
