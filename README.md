@@ -18,7 +18,7 @@ On the server you'd like to run this on, pull down the latest (adjust the path y
 
 Now, open the index.html file in your browser. You should get an auth error and be given a form for your client ID. 
 
-![Harvest billable time](https://www.dropbox.com/s/vr2cxdng92sagvd/harvest-docs-01.png?dl=1)
+![Harvest billable time](assets/harvest-docs-01.png)
 
 You get your client ID from Harvest itself like so:
 
@@ -26,17 +26,15 @@ You get your client ID from Harvest itself like so:
 2. Scroll down and clikc the **Authorized OAuth2 API Clients** button
 3. Click the green **New Client** button 
 4. Give your app a name, then drop the URL from your browser into the "Website URL" and "Redirect URI" fields. 
-5. Click **Save Settings** and you should see something like this:
-
-![Harvest billable time](https://www.dropbox.com/s/dq8gz5zuzp45lyk/Screenshot%202017-04-08%2010.04.50.png?dl=1)
+5. Click **Save Settings**
 
 Copy the Client ID number, paste it into the form from above, and click **Authorize**. You should see a screen from Harvest, click **Authorize** and you'll be redirected back to the app with today's totals showing:
 
-![Harvest billable time](https://www.dropbox.com/s/d7s6iabyumq7431/Screenshot%202017-04-08%2010.12.20.png?dl=1)
+![Harvest billable time](assets/harvest-progress-01-06-2017.png)
 
 Click on **Weeks** to see the weekly total and load more weeks:
 
-![Harvest billable time](https://www.dropbox.com/s/6k563cev0y3e6up/Screenshot%202017-04-08%2010.14.41.png?dl=1)
+![Harvest billable time](assets/harvest-progress-01-17-2017.png)
 
 One thing to note here. If you get an error when loading new weeks, it's likely because you have an archived project in your timesheet. You can re-open the project and re-load the list to see that week's data.
 
@@ -46,6 +44,6 @@ But this tool is meant to go one step further and show your wasted time as well.
 
 I track total time in front of a computer manually. When I sit down in the morning, I write that time down immediately. Maybe I read a few sites, maybe I shuffle around papers, or maybe I get right to it but the day's timer is already running. If I take 15 minutes off, I'll keep the "timer" running and just note that I was away for 15. If I stop for an extended period of time, I'll write an end date for the first period, then another start date when I'm back. Notes and archives without this app look like this:
 
-![Harvest billable time](https://www.dropbox.com/s/7xyflceuptcbasw/harvest_notes.jpg?dl=1)
+![Harvest billable time](assets/harvest_notes.jpg)
 
 This is definitely extra work but I see it as worth the time to remind myself both that I need to hit a certain number of hours and show myself how much time I lose to the internet. 
